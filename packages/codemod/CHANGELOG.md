@@ -1,5 +1,17 @@
 # @modelcontextprotocol/codemod
 
+## 2.0.0-alpha.2
+
+### Patch Changes
+
+- [#2286](https://github.com/modelcontextprotocol/typescript-sdk/pull/2286) [`1823aae`](https://github.com/modelcontextprotocol/typescript-sdk/commit/1823aae891837ebb5e3db885ec635f9efefd5771) Thanks [@felixweinberger](https://github.com/felixweinberger)! - The v1→v2 codemod no longer rewrites `taskStore`/`taskMessageQueue` McpServer constructor options into `capabilities.tasks` — that target does not exist in v2 (the experimental tasks runtime was removed, SEP-2663). The codemod now leaves the code untouched and emits an action-required diagnostic telling migrators to remove the option, matching the removal guidance already given for `experimental/tasks` imports and the migration guide.
+
+- [#2386](https://github.com/modelcontextprotocol/typescript-sdk/pull/2386) [`36055d5`](https://github.com/modelcontextprotocol/typescript-sdk/commit/36055d5bbd1d078922aa025acea6880e61a20577) Thanks [@KKonstantinov](https://github.com/KKonstantinov)! - Preserve a leading `#!` shebang (and the blank lines after it) when migrating a file. Some transforms drop the shebang because it is leading trivia of the first import they rewrite; the codemod now captures it before transforms and restores it before saving, so CLI packages whose `bin` points at the migrated entry keep working.
+
+- [#2286](https://github.com/modelcontextprotocol/typescript-sdk/pull/2286) [`1823aae`](https://github.com/modelcontextprotocol/typescript-sdk/commit/1823aae891837ebb5e3db885ec635f9efefd5771) Thanks [@felixweinberger](https://github.com/felixweinberger)! - v1-to-v2: now wraps `outputSchema` raw shapes with `z.object()`; importMap covers `sdk/server/express.js`, `sdk/server/middleware/hostHeaderValidation.js`, and `sdk/client/auth-extensions.js`. The unreachable `expressMiddleware` transform is removed.
+
+- [#2383](https://github.com/modelcontextprotocol/typescript-sdk/pull/2383) [`9f8ba61`](https://github.com/modelcontextprotocol/typescript-sdk/commit/9f8ba6127989c371cccf0dbb72ef0cbf4726f9b0) Thanks [@felixweinberger](https://github.com/felixweinberger)! - Keep the result-schema argument on `request()` calls unless the method is a literal spec method, and keep the generic passthrough `ResultSchema` even then. Schema-less v2 `request()` enforces the spec result schema for spec methods and throws a `TypeError` for non-spec methods, so dropping the schema from a dynamic-method call site (the proxy/forwarder shape, `request({ method, params }, ResultSchema)`) or from a custom-method call broke the call. `callTool()` is unaffected — v2 `callTool()` has no schema parameter.
+
 ## 2.0.0-alpha.1
 
 ### Minor Changes
